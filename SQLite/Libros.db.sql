@@ -1,0 +1,84 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "tblUsuario" (
+	"strCedulaUsuario"	VARCHAR(20) NOT NULL,
+	"StrPrimerNombre"	VARCHAR(45) NOT NULL,
+	"strSegundoNombre"	VARCHAR(45),
+	"strPrimerApellido"	VARCHAR(45) NOT NULL,
+	"strSegundoApellido"	VARCHAR(45) NOT NULL,
+	"strCorreo"	VARCHAR(45) NOT NULL,
+	"strContrasena"	VARCHAR(45) NOT NULL,
+	PRIMARY KEY("strCedulaUsuario")
+);
+CREATE TABLE IF NOT EXISTS "tblGenero" (
+	"intIdGenero"	INT NOT NULL,
+	"strNombreGenero"	VARCHAR(25) NOT NULL,
+	"strDescripcionGenero"	VARCHAR(50) NOT NULL,
+	PRIMARY KEY("intIdGenero")
+);
+CREATE TABLE IF NOT EXISTS "tblEmpleado" (
+	"strCedulaEmpleado"	VARCHAR(20) NOT NULL,
+	"strNombreEmpleado"	VARCHAR(45) NOT NULL,
+	"strApellidoEmpleado"	VARCHAR(45) NOT NULL,
+	"strCorreoEmpleado"	VARCHAR(45) NOT NULL,
+	"strContrasenaEmpleado"	VARCHAR(45) NOT NULL,
+	PRIMARY KEY("strCedulaEmpleado")
+);
+CREATE TABLE IF NOT EXISTS "tblPrestamo" (
+	"intIdPrestamo"	INT NOT NULL,
+	"tblUsuario_strCedulaUsuario"	VARCHAR(20) NOT NULL,
+	"tblEmpleado_strCedulaEmpleado"	VARCHAR(20) NOT NULL,
+	PRIMARY KEY("intIdPrestamo","tblUsuario_strCedulaUsuario","tblEmpleado_strCedulaEmpleado"),
+	CONSTRAINT "fk_tblPrestamo_tblEmpleado1" FOREIGN KEY("tblEmpleado_strCedulaEmpleado") REFERENCES "tblEmpleado"("strCedulaEmpleado") ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT "fk_tblPrestamo_tblUsuario1" FOREIGN KEY("tblUsuario_strCedulaUsuario") REFERENCES "tblUsuario"("strCedulaUsuario") ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE TABLE IF NOT EXISTS "tblDetallePrestamo" (
+	"tblPrestamo_intIdPrestamo"	INT NOT NULL,
+	"tblLibros_IntIdLibro"	INT NOT NULL,
+	"dateFechaPrestamo"	DATE NOT NULL,
+	"boolEstado"	TINYINT NOT NULL,
+	PRIMARY KEY("tblPrestamo_intIdPrestamo","tblLibros_IntIdLibro"),
+	CONSTRAINT "fk_tblPrestamo_has_tblLibros_tblLibros1" FOREIGN KEY("tblLibros_IntIdLibro") REFERENCES "tblLibros"("IntIdLibro") ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT "fk_tblPrestamo_has_tblLibros_tblPrestamo1" FOREIGN KEY("tblPrestamo_intIdPrestamo") REFERENCES "tblPrestamo"("intIdPrestamo") ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+CREATE TABLE IF NOT EXISTS "tblLibros" (
+	"IntIdLibro"	INT NOT NULL,
+	"strNombre"	VARCHAR(45) NOT NULL,
+	"strDescripcion"	VARCHAR(45) NOT NULL,
+	"strAutor"	VARCHAR(45) NOT NULL,
+	"intAnoCreacion"	INT NOT NULL,
+	"tblGenero_intIdGenero"	INT NOT NULL,
+	PRIMARY KEY("IntIdLibro","tblGenero_intIdGenero"),
+	CONSTRAINT "fk_tblLibros_tblGenero1" FOREIGN KEY("tblGenero_intIdGenero") REFERENCES "tblGenero"("intIdGenero") ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+INSERT INTO "tblUsuario" VALUES ('1020102262','JULIANA',NULL,'JARAMILLO','MÉNDEZ','jjuly642@gmail.com','12345');
+INSERT INTO "tblUsuario" VALUES ('1034921776','MARIO',NULL,'RESTREPO','JARAMILLO','maritores@gmail.com','hola123');
+INSERT INTO "tblUsuario" VALUES ('234567832','JACKELINE',NULL,'JARAMILLO','MÉNDEZ','jackyy92@live.com','holi1');
+INSERT INTO "tblUsuario" VALUES ('2398765432','IVÁN','FERNANDO','RESTREPO','BELTRÁN','ivanfer@outlook.com','jaja123');
+INSERT INTO "tblGenero" VALUES (1,'TERROR','LIBROS DE TERROR');
+INSERT INTO "tblGenero" VALUES (2,'ROMANCE','LIBROS DE ROMANCE');
+INSERT INTO "tblGenero" VALUES (3,'CIENTÍFICOS','LIBROS CIENTÍFICOS');
+INSERT INTO "tblGenero" VALUES (4,'DRAMA','LIBROS DE DRAMA');
+INSERT INTO "tblGenero" VALUES (5,'THRILLER','LIBROS DE THRILLER');
+INSERT INTO "tblGenero" VALUES (6,'FICCIÓN','LIBROS DE FICCIÓN');
+INSERT INTO "tblGenero" VALUES (7,'CIENCIA FICCIÓN','LIBROS DE CIENCIA FICCIÓN');
+INSERT INTO "tblGenero" VALUES (8,'SOCIALES','LIBROS DE SOCIALES');
+INSERT INTO "tblGenero" VALUES (9,'HISTORIA','LIBROS DE HISTORIA');
+INSERT INTO "tblEmpleado" VALUES ('0987654','CAMILO','ZAPATA','camilitozap@gmail.com','emp1');
+INSERT INTO "tblEmpleado" VALUES ('875673642','MARÍA','ARTUNDUAGA','mariart@gmail.com','emp1');
+INSERT INTO "tblPrestamo" VALUES (1,'1020102262','0987654');
+INSERT INTO "tblPrestamo" VALUES (2,'1034921776','875673642');
+INSERT INTO "tblPrestamo" VALUES (3,'234567832','875673642');
+INSERT INTO "tblPrestamo" VALUES (4,'2398765432','0987654');
+INSERT INTO "tblLibros" VALUES (1,'LOS JUEGOS DEL HAMBRE','LIBRO LOS JUEGOS DEL HAMBRE','SUZZANE COLLINS',2008,7);
+INSERT INTO "tblLibros" VALUES (2,'AFTER','LIBRO AFTER','ANNA TODD',2014,2);
+INSERT INTO "tblLibros" VALUES (3,'BAJO LA MISMA ESTRELLA','LIBRO BAJO LA MISMA ESTRELLA','JOHN GREEN',2012,2);
+INSERT INTO "tblLibros" VALUES (4,'LOS JUEGOS DEL HAMBRE','LIBRO LOS JUEGOS DEL HAMBRE, EJEMPLAR 2','SUZZANE COLLINS',2008,7);
+INSERT INTO "tblLibros" VALUES (5,'IT','LIBRO DE TERROR IT','STEPHEN KING',1986,1);
+INSERT INTO "tblLibros" VALUES (6,'EL GEN EGOÍSTA','LIBRO EL GEN EGOÍSTA','RICHARD DAWKINS',1976,3);
+INSERT INTO "tblLibros" VALUES (7,'NUESTRA SEÑORA DE PARÍS','LIBRO NUESTRA SEÑORA DE PARÍS','VICTOR HUGO',1831,4);
+INSERT INTO "tblLibros" VALUES (8,'EL PSICOANALISTA','LIBRO EL PSICOANALISTA','JOHN KATZENBACH',2002,5);
+INSERT INTO "tblLibros" VALUES (9,'1984','LIBRO 1984','GEORGE ORWELL',1949,6);
+INSERT INTO "tblLibros" VALUES (10,'EL EXTRAÑO ORDEN DE LAS COSAS','LIBRO EL EXTRAÑO ORDEN DE LAS COSAS','ANTONIO DAMASO',2017,8);
+INSERT INTO "tblLibros" VALUES (11,'LA ESPAÑA IMPERIAL, 1469-1716','LIBRO LA ESPAÑA IMPERIAL, 1469-1716','JOHN ELLIOTT',1963,9);
+INSERT INTO "tblLibros" VALUES (12,'EL GEN EGOÍSTA','LIBRO EL GEN EGOÍSTA, EJEMPLAR 2','RICHARD DAWKINS',1976,3);
+COMMIT;
